@@ -1,7 +1,18 @@
+import NewBookForm from './NewBookForm';
 import ProductItem from './ProductItem';
 import classes from './Products.module.css';
+import { useState, useEffect,useRef } from 'react';
+import { sendBookData,FetchBookData } from '../../store/book-action';
+import { useSelector,useDispatch } from 'react-redux';
 
 const Products = (props) => {
+  const isInitials = useRef(true);
+  const dispatch = useDispatch();
+  const books = useSelector(state=>state.books);
+
+  useEffect(()=>{
+      dispatch(FetchBookData());
+  },[dispatch])
   const DummyData = [
     {
       id: 1,
@@ -25,14 +36,15 @@ const Products = (props) => {
   return (
     <section className={classes.products}>
       <h2>Buy your favorite products</h2>
+      <NewBookForm/>
       <ul>
-        {DummyData.map((item)=>
+        {books.books.map((item)=>
         <ProductItem
         key={item.id}
         id = {item.id}
         title={item.title}
         price={item.price}
-        description='This is a first product - amazing!'
+        description={item.description}
       />
         )}
       </ul>
